@@ -29,7 +29,8 @@ function getEvent(req, res) {
     db.get(req.params.id, function (err, doc) {
         if (err){
             console.log('Problem getting document "'+req.params.id+'"', err);
-            logError(doc, err);
+            if (err.error === "not_found")
+                res.status(400).send({error: 'Object not found: ' + err.reason});
         } else {
             res.status(201).send(doc);
         }
@@ -38,17 +39,22 @@ function getEvent(req, res) {
 
 function createEvent(req, res) {
     var doc = req.body;
+    console.log("Request body: "+JSON.stringify(doc, undefined,2));
     if (!doc.type) {
         res.status(400).send({error: 'Invalid input. Missing parameter: type.'});
+        console.log('Invalid input. Missing parameter: type.');
         return;
     } else if (!doc.name) {
         res.status(400).send({error: 'Invalid input. Missing parameter: name.'});
+        console.log('Invalid input. Missing parameter: name.');
         return;
     } else if (!doc.address) {
         res.status(400).send({error: 'Invalid input. Missing parameter: address.'});
+        console.log('Invalid input. Missing parameter: address.');
         return;
     } else if (!doc.dateTimestamp) {
         res.status(400).send({error: 'Invalid input. Missing parameter: dateTimestamp.'});
+        console.log('Invalid input. Missing parameter: dateTimestamp.');
         return;
     }
     db.save(
