@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
-var cradle = require('cradle');
-var c = new(cradle.Connection);
-var db = c.database('eventsdb');
+var db = require('../lib/model');
 
 function logError(res, err) {
     res.status(500).send({error: 'Unexpected Error: ' + err});
